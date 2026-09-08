@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Mentor's Desk — a private review space for feedback on Marie Yahaya's portfolio.">
+<title>Mentor's Desk — Marie Yahaya</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.review-hero{padding:96px 0 58px;border-bottom:1px solid var(--line)}
+.review-hero h1{font:600 clamp(56px,8vw,104px)/.92 'Playfair Display',serif;letter-spacing:-.07em;margin:14px 0 20px;max-width:950px}
+.review-hero h1 em{color:var(--rose)}
+.review-hero p{max-width:720px;color:var(--muted);font-size:15px;line-height:1.9}
+.review-wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:70px;padding:70px 0 110px}
+.review-panel{border-top:1px solid var(--line);padding-top:20px}
+.review-panel h2{font:600 34px/1.05 'Playfair Display',serif;margin:0 0 10px}
+.review-note{color:var(--muted);font-size:13px;line-height:1.7;margin:0 0 28px;max-width:620px}
+.review-form{display:grid;gap:16px}
+.review-field label{display:block;font:10px 'Space Mono',monospace;letter-spacing:.12em;color:var(--rose);margin-bottom:8px}
+.review-field input,.review-field select,.review-field textarea{width:100%;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:14px;padding:13px 14px;font:14px 'DM Sans',sans-serif;outline:none}
+.review-field textarea{min-height:160px;resize:vertical;line-height:1.7}
+.review-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.review-status{min-height:22px;color:var(--muted);font-size:12px;line-height:1.5}
+.review-list{display:grid;gap:18px}
+.review-comment{border:1px solid var(--line);border-radius:20px;background:var(--card);padding:20px}
+.review-comment .comment-meta{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;color:var(--muted);font:10px 'Space Mono',monospace;letter-spacing:.07em;text-transform:uppercase}
+.review-comment h3{font:600 23px/1.1 'Playfair Display',serif;margin:12px 0 9px}
+.review-comment p{margin:0;color:var(--ink);font-size:13px;line-height:1.75;white-space:pre-wrap}
+.review-empty{border:1px dashed var(--line);border-radius:20px;padding:26px;color:var(--muted);font-size:13px;line-height:1.7}
+.review-private{font:10px 'Space Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:12px}
+@media(max-width:900px){.review-wrap{grid-template-columns:1fr;gap:50px}}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<header class="nav-wrap"><nav class="nav container">
+<a class="brand" href="index.html#top" aria-label="Marie home">M<span>Y</span>.</a>
+<div class="nav-links"><a href="index.html#top">Home</a><a href="about-me.html">About Me</a><a href="index.html#projects">Projects</a><a href="index.html#experience">Experience</a><a href="index.html#activities">Activities</a><a href="credentials.html">Credentials</a><a href="visual-diary.html">Visual Diary</a><a href="my-take.html">My Take</a><a href="blog.html">Journal</a><a href="mentor-review.html">Mentor's Desk</a><a href="index.html#contact">Contact</a></div>
+<button aria-label="Open menu" class="menu-btn"></button></nav>
+<div class="mobile-menu"><a href="index.html#top">Home</a><a href="about-me.html">About Me</a><a href="index.html#projects">Projects</a><a href="index.html#experience">Experience</a><a href="index.html#activities">Activities</a><a href="credentials.html">Credentials</a><a href="visual-diary.html">Visual Diary</a><a href="my-take.html">My Take</a><a href="blog.html">Journal</a><a href="mentor-review.html">Mentor's Desk</a><a href="index.html#contact">Contact</a></div></header>
+<main>
+<section class="review-hero"><div class="container"><span class="kicker">A PRIVATE SPACE FOR FEEDBACK</span><h1>Welcome to the<br><em>Mentor's Desk.</em></h1><p>This page is designed for a mentor who wants to leave thoughtful notes on my portfolio. Choose a part of my story, write what you notice, what you would change, or what you think I should explore next. Once connected, your notes are saved securely and become part of my private review archive.</p></div></section>
+<section class="container review-wrap">
+<div class="review-panel"><h2>Leave a note</h2><p class="review-note">This is a private space for thoughtful feedback. You can comment on my story, positioning, projects, leadership, writing, ambitions or any section you think could become clearer or stronger.</p>
+<form class="review-form" id="reviewForm">
+<div class="review-field"><label for="reviewName">YOUR NAME</label><input id="reviewName" name="name" type="text" autocomplete="name" placeholder="Your name" required></div>
+<div class="review-field"><label for="reviewSection">WHAT ARE YOU REVIEWING?</label><select id="reviewSection" name="section" required><option value="overall">Overall impression</option><option value="about">About Me</option><option value="projects">Projects</option><option value="experience">Experience & Activities</option><option value="credentials">Credentials & learning</option><option value="visual">Visual Diary</option><option value="my-take">My Take</option><option value="journal">Journal</option><option value="future">Vision & next steps</option></select></div>
+<div class="review-field"><label for="reviewNote">YOUR NOTE</label><textarea id="reviewNote" name="content" placeholder="What should Marie know?" required></textarea></div>
+<div class="review-actions"><button class="btn btn-dark" type="submit">Save note</button><button class="text-link" type="button" id="refreshReview">Refresh notes ↗</button></div>
+<div class="review-status" id="reviewStatus" aria-live="polite"></div>
+</form></div>
+<div class="review-panel"><h2>Review archive</h2><p class="review-note">Notes from approved reviewers appear here in reverse chronological order. The archive is private and requires an authenticated reviewer account.</p><div id="reviewList" class="review-list"><div class="review-empty">Connect the review backend to activate this private archive.</div></div><p class="review-private">Private review space · Supabase authentication + row-level security</p></div>
+</section></main>
+<script src="global.js" defer></script>
+<script src="review-config.js"></script>
+<script src="mentor-review.js" defer></script>
+</body></html>
