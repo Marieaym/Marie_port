@@ -3,5 +3,5 @@
 window.REVIEW_CONFIG = {
   supabaseUrl: 'https://ovssbpnlryhfitqwycot.supabase.co',
   supabaseAnonKey: 'sb_publishable_-gxswLaVR65jH31I70yw1w_CdeeGcH4',
-  ownerEmail: 'abdouyahayamarie006@gmail.com',
+  ownerEmail: 'YOUR_MARIE_EMAIL'
 };
