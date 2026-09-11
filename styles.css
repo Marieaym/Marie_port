@@ -256,3 +256,148 @@ body { overflow-x: hidden; }
 html[data-theme='dark'] .menu-btn{background:rgba(36,27,29,.92);border-color:var(--line);color:var(--ink)}
 html[data-theme='dark'] .mobile-menu{background:rgba(23,18,20,.98);border-bottom-color:var(--line)}
 html[data-theme='dark'] .mobile-menu a{background:rgba(34,25,27,.92);border-color:var(--line);color:var(--ink)}
+
+
+/* V21 — real mobile navigation + compact section browsing */
+.menu-btn{
+  position:relative;
+  width:42px;
+  height:42px;
+  flex:0 0 42px;
+  padding:0;
+  border:1px solid var(--line);
+  border-radius:50%;
+  background:rgba(255,255,255,.72);
+  cursor:pointer;
+}
+.menu-btn::before,
+.menu-btn::after{
+  content:"";
+  position:absolute;
+  left:12px;
+  width:16px;
+  height:1.5px;
+  background:currentColor;
+  transition:transform .2s ease, top .2s ease;
+}
+.menu-btn::before{top:16px}
+.menu-btn::after{top:24px}
+.menu-btn[aria-expanded="true"]::before{top:20px;transform:rotate(45deg)}
+.menu-btn[aria-expanded="true"]::after{top:20px;transform:rotate(-45deg)}
+.mobile-menu{
+  position:absolute;
+  top:calc(100% + 8px);
+  left:14px;
+  right:14px;
+  display:none;
+  padding:10px;
+  background:rgba(255,250,249,.98);
+  border:1px solid var(--line);
+  border-radius:22px;
+  box-shadow:0 24px 60px rgba(71,41,44,.14);
+  max-height:calc(100vh - 92px);
+  overflow:auto;
+  z-index:70;
+}
+.mobile-menu.open{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.mobile-menu a{padding:12px 11px;border-radius:14px;background:transparent}
+.mobile-menu a:hover,.mobile-menu a:focus-visible{background:var(--blush);outline:none}
+
+@media(max-width:860px){
+  .nav-wrap{z-index:100}
+  .nav{position:relative}
+  .nav-links{display:none!important}
+  .menu-btn{display:inline-block}
+  .site-controls{margin-left:auto}
+  .hero{grid-template-columns:1fr;min-height:auto;padding:42px 0 56px;gap:18px}
+  .hero-art{order:-1}
+  .portrait-frame{width:min(300px,76vw)}
+  .hero-copy{text-align:center}
+  .hero h1{font-size:clamp(56px,17vw,82px);margin:12px 0 18px}
+  .hero-lead{font-size:16px;line-height:1.6}
+  .hero-actions{justify-content:center;margin-top:24px;gap:14px}
+  .hero-note{margin-top:22px}
+  .section{padding:64px 0}
+  .section-intro h2{font-size:clamp(38px,11vw,56px)}
+  .projects-head{margin-bottom:28px}
+
+  /* Keep long home sections horizontal instead of stacking every item. */
+  #projects .project-grid,
+  #experience .experience-stack,
+  #activities .activity-grid,
+  #learning .learning-grid,
+  #mytake .take-grid,
+  #blog .blog-grid,
+  .achievement-grid,
+  .community-grid{
+    display:flex!important;
+    overflow-x:auto;
+    overflow-y:hidden;
+    gap:14px;
+    padding:2px 4px 14px;
+    margin-right:-6px;
+    scroll-snap-type:x mandatory;
+    scrollbar-width:thin;
+  }
+  #projects .project-card,
+  #experience .experience-card,
+  #activities .activity-tile,
+  #learning .learning-column,
+  #mytake .take-card,
+  #blog .blog-card,
+  .achievement,
+  .community-card{
+    flex:0 0 min(84vw,350px);
+    scroll-snap-align:start;
+  }
+  #projects .project-card{border-radius:22px}
+  #projects .project-visual{height:210px}
+  #projects .project-body{padding:18px}
+  #projects .project-body h3{font-size:28px}
+  #projects .project-body p{min-height:auto;font-size:13px}
+  #projects .card-links{gap:10px;flex-wrap:wrap}
+  #experience .experience-stack,
+  #activities .activity-grid{display:flex!important}
+  #activities .activity-tile{min-height:126px}
+  .achievement{min-height:180px;padding:22px}
+  .community-card{min-height:190px}
+  #learning .learning-column{padding:22px;border-radius:22px}
+  #mytake .take-card{min-height:225px}
+  #blog .blog-card{min-height:100%}
+
+  /* Hide nonessential long-form duplicate content from Home on mobile;
+     the full pages remain one tap away. */
+  #journey .timeline{margin-top:28px}
+  #journey .timeline-item:nth-child(n+4){display:none}
+  #experience .experience-stack + *{margin-top:18px}
+  .skills-section .skills-grid{display:flex;overflow-x:auto;gap:14px}
+  .skills-section .skill-group{flex:0 0 min(84vw,350px)}
+}
+
+@media(max-width:600px){
+  .container{width:calc(100% - 28px)}
+  .nav{height:62px}
+  .brand{font-size:22px}
+  .mobile-menu.open{grid-template-columns:1fr}
+  .site-controls .control-btn{width:34px;height:34px}
+  .hero-art{padding-top:0}
+  .portrait-frame{width:min(280px,72vw)}
+  .portrait-placeholder{inset:22px}
+  .sticker{font-size:8px;padding:7px 10px}
+  .sticker-one{right:0}
+  .sticker-two{left:0}
+  .section{padding:58px 0}
+  .section-side-copy{font-size:13px;line-height:1.6}
+  .project-meta{font-size:8px}
+  .tag-row span{font-size:8px;padding:5px 7px}
+  .other-projects{font-size:11px;line-height:1.55}
+  .marquee{font-size:8px}
+}
+
+html[data-theme='dark'] .mobile-menu{
+  background:rgba(29,21,23,.98);
+  border-color:#4a393d;
+}
+html[data-theme='dark'] .mobile-menu a:hover,
+html[data-theme='dark'] .mobile-menu a:focus-visible{background:#39282c}
+html[data-theme='dark'] .menu-btn{background:#241b1d;color:#f7efef;border-color:#4a393d}

@@ -182,4 +182,24 @@
   // which previously caused a MutationObserver feedback loop that could freeze the page.
   document.addEventListener('DOMContentLoaded', injectControls, { once: true });
   if (document.readyState !== 'loading') injectControls();
+
+  function setupMobileMenu(){
+    const menuBtn=document.querySelector('.menu-btn');
+    const menu=document.querySelector('.mobile-menu');
+    if(!menuBtn || !menu || menuBtn.dataset.menuReady==='true') return;
+    menuBtn.dataset.menuReady='true';
+    const setMenu=(open)=>{
+      menu.classList.toggle('open',open);
+      menuBtn.setAttribute('aria-expanded',open?'true':'false');
+      menuBtn.setAttribute('aria-label',open?'Close menu':'Open menu');
+    };
+    menuBtn.addEventListener('click',(event)=>{event.stopPropagation();setMenu(!menu.classList.contains('open'));});
+    menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setMenu(false)));
+    document.addEventListener('keydown',(e)=>{if(e.key==='Escape')setMenu(false);});
+    document.addEventListener('click',(e)=>{if(menu.classList.contains('open')&&!menu.contains(e.target)&&e.target!==menuBtn)setMenu(false);});
+  }
+
+  document.addEventListener('DOMContentLoaded', setupMobileMenu, {once:true});
+  if(document.readyState!=='loading') setupMobileMenu();
+
 })();
