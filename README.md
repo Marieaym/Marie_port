@@ -33,3 +33,6 @@ V15 CONTENT ARCHITECTURE:
 - My Take: questions and personal viewpoints
 - Journal: long-form writing and reflections
 - Mentor's Desk: private mentor feedback
+
+## Mobile navigation fix
+The mobile menu is handled only by `global.js`. A duplicate handler previously existed in `script.js`, causing the menu to open and close immediately on some devices. The final mobile CSS makes the menu a fixed drawer below the sticky navigation.

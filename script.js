@@ -1,22 +1,3 @@
-const menuBtn = document.querySelector('.menu-btn');
-const mobileMenu = document.querySelector('.mobile-menu');
-
-function setMenu(open) {
-  if (!mobileMenu || !menuBtn) return;
-  mobileMenu.classList.toggle('open', open);
-  menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-  menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-}
-
-menuBtn?.addEventListener('click', () => setMenu(!mobileMenu?.classList.contains('open')));
-document.querySelectorAll('.mobile-menu a').forEach(a => a.addEventListener('click', () => setMenu(false)));
-document.addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
-document.addEventListener('click', e => {
-  if (!mobileMenu?.classList.contains('open')) return;
-  if (mobileMenu.contains(e.target) || menuBtn?.contains(e.target)) return;
-  setMenu(false);
-});
-
 const observer = 'IntersectionObserver' in window ? new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) entry.target.classList.add('in-view');

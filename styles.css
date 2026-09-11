@@ -401,3 +401,29 @@ html[data-theme='dark'] .mobile-menu{
 html[data-theme='dark'] .mobile-menu a:hover,
 html[data-theme='dark'] .mobile-menu a:focus-visible{background:#39282c}
 html[data-theme='dark'] .menu-btn{background:#241b1d;color:#f7efef;border-color:#4a393d}
+
+/* FINAL MOBILE NAVIGATION FIX */
+@media (max-width: 860px){
+  .nav-wrap{position:sticky;top:0;z-index:9999}
+  .nav{position:relative;z-index:10000}
+  .menu-btn{display:inline-flex !important;align-items:center;justify-content:center;position:relative;z-index:10001}
+  .nav-links{display:none !important}
+  .site-controls{margin-left:auto;display:flex;align-items:center;gap:6px}
+  .mobile-menu{
+    position:fixed !important;
+    top:66px !important;
+    left:14px !important;
+    right:14px !important;
+    width:auto !important;
+    display:none !important;
+    max-height:calc(100vh - 82px) !important;
+    overflow-y:auto !important;
+    padding:10px !important;
+    z-index:10000 !important;
+  }
+  .mobile-menu.open{display:grid !important}
+}
+@media (max-width:600px){
+  .mobile-menu{top:62px !important;left:10px !important;right:10px !important;border-radius:20px !important}
+  .mobile-menu a{font-size:13px !important;line-height:1.2;padding:13px 12px !important}
+}
