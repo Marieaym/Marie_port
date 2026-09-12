@@ -156,6 +156,27 @@
     await load();
   });
 
+  document.getElementById("verifyCode")?.addEventListener("click", async () => {
+    const email = document.getElementById("authEmail")?.value.trim();
+    const token = document.getElementById("authCode")?.value.trim();
+    if (!email) { setStatus(authStatus, "Please enter your email address."); return; }
+    if (!token) { setStatus(authStatus, "Please enter the 6-digit code from the email."); return; }
+    setStatus(authStatus, "Verifying your code...");
+    try {
+      const { error } = await client.auth.verifyOtp({ email, token, type: "email" });
+      if (error) { setStatus(authStatus, error.message); return; }
+      const codeInput = document.getElementById("authCode");
+      if (codeInput) codeInput.value = "";
+      setStatus(authStatus, "You're in.");
+    } catch (error) {
+      setStatus(authStatus, error.message || "Unable to verify that code.");
+    }
+  });
+
+  document.getElementById("authCode")?.addEventListener("keydown", e => {
+    if (e.key === "Enter") { e.preventDefault(); document.getElementById("verifyCode")?.click(); }
+  });
+
   form?.addEventListener("submit", async e => {
     e.preventDefault();
     try {

@@ -19,7 +19,7 @@
   function titleCase(v){const t=normalizeType(v);return t.charAt(0).toUpperCase()+t.slice(1);}
 
   if(!ready){gateStatus.textContent="Review access is not configured yet. Add your Supabase values to review-config.js.";return;}
-  const client=window.supabase.createClient(cfg.supabaseUrl,cfg.supabaseAnonKey);
+  const client=window.supabase.createClient(cfg.supabaseUrl,cfg.supabaseAnonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:"implicit"}});
 
   async function load(){
     try{
@@ -61,8 +61,22 @@
     </article>`).join("");
   }
 
-  document.getElementById("login")?.addEventListener("click",async()=>{const email=document.getElementById("email").value.trim();if(!email){gateStatus.textContent="Enter your email address.";return;}gateStatus.textContent="Sending your secure link...";const {error}=await client.auth.signInWithOtp({email,options:{emailRedirectTo:location.href}});gateStatus.textContent=error?error.message:"Check your inbox for your secure sign-in link.";});
+  document.getElementById("login")?.addEventListener("click",async()=>{const email=document.getElementById("email").value.trim();if(!email){gateStatus.textContent="Enter your email address.";return;}gateStatus.textContent="Sending your secure link...";const {error}=await client.auth.signInWithOtp({email,options:{emailRedirectTo:`${location.origin}/marie-inbox.html`}});gateStatus.textContent=error?error.message:"Check your inbox for your secure sign-in link.";});
   document.getElementById("logout")?.addEventListener("click",async()=>{await client.auth.signOut();await load();});
+  document.getElementById("verifyCode")?.addEventListener("click",async()=>{
+    const email=document.getElementById("email")?.value.trim();
+    const token=document.getElementById("code")?.value.trim();
+    if(!email){gateStatus.textContent="Enter your email address.";return;}
+    if(!token){gateStatus.textContent="Enter the 6-digit code from the email.";return;}
+    gateStatus.textContent="Verifying your code...";
+    try{
+      const {error}=await client.auth.verifyOtp({email,token,type:"email"});
+      if(error){gateStatus.textContent=error.message;return;}
+      const codeInput=document.getElementById("code");if(codeInput)codeInput.value="";
+      gateStatus.textContent="You're in.";
+    }catch(error){gateStatus.textContent=error.message||"Unable to verify that code.";}
+  });
+  document.getElementById("code")?.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();document.getElementById("verifyCode")?.click();}});
   document.querySelectorAll(".filter[data-filter]").forEach(btn=>btn.addEventListener("click",()=>{document.querySelectorAll(".filter[data-filter]").forEach(x=>x.classList.remove("active"));btn.classList.add("active");currentFilter=btn.dataset.filter;render();}));
 
   list?.addEventListener("click",async e=>{
