@@ -60,27 +60,9 @@
       persistSession: true,
       autoRefreshToken: true,
       detectSessionInUrl: true,
-      flowType: "pkce"
+      flowType: "implicit"
     }
   });
-
-  async function completeAuthRedirect() {
-    const url = new URL(window.location.href);
-    const code = url.searchParams.get("code");
-    if (!code) return;
-
-    try {
-      const { error } = await client.auth.exchangeCodeForSession(code);
-      if (error) throw error;
-      url.searchParams.delete("code");
-      url.searchParams.delete("auth");
-      window.history.replaceState({}, document.title, url.toString());
-    } catch (error) {
-      console.error("Authentication callback error:", error);
-      setStatus(authStatus, error.message || "Unable to complete sign-in. Please request a new link.");
-      throw error;
-    }
-  }
 
   async function getSession() {
     const { data, error } = await client.auth.getSession();
@@ -90,7 +72,6 @@
 
   async function load() {
     try {
-      await completeAuthRedirect();
       const session = await getSession();
       if (!session) {
         hide(workspace); show(authPanel); setStatus(reviewStatus, ""); return;
@@ -161,7 +142,11 @@
     if (!email) { setStatus(authStatus, "Please enter your email address."); return; }
     setStatus(authStatus, "Sending your secure link...");
     try {
-      const { error } = await client.auth.signInWithOtp({ email, options: { emailRedirectTo: new URL("mentor-review.html", window.location.href).toString() } });
+      const redirectUrl = `${window.location.origin}/mentor-review.html`;
+      const { error } = await client.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo: redirectUrl }
+      });
       setStatus(authStatus, error ? error.message : "Check your inbox for your secure sign-in link.");
     } catch (error) { setStatus(authStatus, error.message || "Unable to send the sign-in link."); }
   });
@@ -247,10 +232,46 @@
     }
   });
 
-  client.auth.onAuthStateChange((event) => {
-    if (["INITIAL_SESSION", "SIGNED_IN", "SIGNED_OUT"].includes(event)) {
-      window.setTimeout(() => load(), 0);
+  let lastLoadedUserId = null;
+  let loading = false;
+
+  async function refreshFromSession(session) {
+    if (loading) return;
+    loading = true;
+    try {
+      if (!session) {
+        lastLoadedUserId = null;
+        hide(workspace);
+        show(authPanel);
+        setStatus(reviewStatus, "");
+        return;
+      }
+
+      // Avoid duplicate reloads caused by INITIAL_SESSION + SIGNED_IN firing together.
+      const userId = session.user?.id || null;
+      if (userId && userId === lastLoadedUserId) return;
+      lastLoadedUserId = userId;
+      await load();
+    } finally {
+      loading = false;
     }
+  }
+
+  client.auth.onAuthStateChange((event, session) => {
+    console.log("Mentor Desk auth event:", event);
+    window.setTimeout(() => refreshFromSession(session), 0);
   });
-  load();
+
+  // Let Supabase consume a magic-link token from the URL before checking the session.
+  window.setTimeout(async () => {
+    try {
+      const session = await getSession();
+      await refreshFromSession(session);
+    } catch (error) {
+      console.error("Mentor Desk initialization error:", error);
+      setStatus(authStatus, error.message || "Unable to initialize secure access.");
+      hide(workspace);
+      show(authPanel);
+    }
+  }, 300);
 })();
