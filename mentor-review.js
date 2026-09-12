@@ -55,7 +55,32 @@
     return;
   }
 
-  const client = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
+  const client = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
+      flowType: "pkce"
+    }
+  });
+
+  async function completeAuthRedirect() {
+    const url = new URL(window.location.href);
+    const code = url.searchParams.get("code");
+    if (!code) return;
+
+    try {
+      const { error } = await client.auth.exchangeCodeForSession(code);
+      if (error) throw error;
+      url.searchParams.delete("code");
+      url.searchParams.delete("auth");
+      window.history.replaceState({}, document.title, url.toString());
+    } catch (error) {
+      console.error("Authentication callback error:", error);
+      setStatus(authStatus, error.message || "Unable to complete sign-in. Please request a new link.");
+      throw error;
+    }
+  }
 
   async function getSession() {
     const { data, error } = await client.auth.getSession();
@@ -65,6 +90,7 @@
 
   async function load() {
     try {
+      await completeAuthRedirect();
       const session = await getSession();
       if (!session) {
         hide(workspace); show(authPanel); setStatus(reviewStatus, ""); return;
@@ -135,7 +161,7 @@
     if (!email) { setStatus(authStatus, "Please enter your email address."); return; }
     setStatus(authStatus, "Sending your secure link...");
     try {
-      const { error } = await client.auth.signInWithOtp({ email, options: { emailRedirectTo: window.location.href } });
+      const { error } = await client.auth.signInWithOtp({ email, options: { emailRedirectTo: new URL("mentor-review.html", window.location.href).toString() } });
       setStatus(authStatus, error ? error.message : "Check your inbox for your secure sign-in link.");
     } catch (error) { setStatus(authStatus, error.message || "Unable to send the sign-in link."); }
   });
@@ -221,6 +247,10 @@
     }
   });
 
-  client.auth.onAuthStateChange(() => { load(); });
+  client.auth.onAuthStateChange((event) => {
+    if (["INITIAL_SESSION", "SIGNED_IN", "SIGNED_OUT"].includes(event)) {
+      window.setTimeout(() => load(), 0);
+    }
+  });
   load();
 })();

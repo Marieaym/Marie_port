@@ -36,3 +36,6 @@ V15 CONTENT ARCHITECTURE:
 
 ## Mobile navigation fix
 The mobile menu is handled only by `global.js`. A duplicate handler previously existed in `script.js`, causing the menu to open and close immediately on some devices. The final mobile CSS makes the menu a fixed drawer below the sticky navigation.
+
+
+IMPORTANT V23: preserve your existing real review-config.js when copying this version. Do not replace it with the placeholder config from the ZIP.
