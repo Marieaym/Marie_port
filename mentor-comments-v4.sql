@@ -55,7 +55,7 @@ on public.mentor_comments
 for insert
 to anon
 with check (
-  access_code = 'MentorAccess'
+  access_code = 'REPLACE_WITH_YOUR_ACCESS_WORD'
   and status = 'new'
   and reply is null
   and replied_at is null
